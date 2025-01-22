@@ -2,10 +2,11 @@
 #include "traval.h"
 
 #include <stack>
+#include <queue>
 
 using namespace std;
 
-// 1.×óÖÐÓÒ 
+// 1.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 vector<int> Travel::MidTravel(TreeNode* head)
 {
 	vector<int> result;
@@ -23,7 +24,7 @@ vector<int> Travel::MidTravel(TreeNode* head)
 		pre_node = stk.top();
 		stk.pop();
 		result.emplace_back(pre_node->val);
-		// ±ØÐëÕâÑù
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 #if 0
 		pre_node = pre_node->right;
 #else
@@ -48,7 +49,7 @@ void reMidTravel(TreeNode* head, vector<int>& result) {
 	result.emplace_back(head->val);
 	reMidTravel(head->right, result);
 }
-// 1.µÝ¹é ×óÖÐÓÒ 
+// 1.ï¿½Ý¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 vector<int> Travel::ReMidTravel(TreeNode* head)
 {
 	vector<int> result;
@@ -68,7 +69,7 @@ void rePreTravel(TreeNode* head, vector<int>& result) {
 	rePreTravel(head->right, result);
 }
 
-// 2.Ç°Ðò  Ç°Ðò±éÀú  ÖÐ×óÓÒ
+// 2.Ç°ï¿½ï¿½  Ç°ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 vector<int> Travel::RePreTravel(TreeNode* head)
 {
 	vector<int> result;
@@ -114,7 +115,7 @@ void reSufTravel(TreeNode* root, vector<int>&result)
 	reSufTravel(root->right, result);
 	result.emplace_back(root->val);
 }
-// 3.ºóÐø±éÀú  ×ó£¬ÓÒ£¬ÖÐ
+// 3.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½Ò£ï¿½ï¿½ï¿½
 vector<int> Travel::ReSufTravel(TreeNode* root)
 {
 	vector<int> result;
@@ -122,9 +123,66 @@ vector<int> Travel::ReSufTravel(TreeNode* root)
 
 	return result;
 }
-
+// 3. ï¿½ï¿½ï¿½
 vector<int> Travel::SufTravel(TreeNode* root)
 {
-	return vector<int>();
+	vector<int> result;
+	if (root == nullptr) {
+		return result;
+	}
+
+	stack<TreeNode*> stk;
+	TreeNode* cur_node = root;
+	TreeNode* pre_node = nullptr;
+	while (!stk.empty() || cur_node != nullptr) {
+		while (cur_node != nullptr) {
+			stk.push(cur_node);
+			cur_node = cur_node->left;
+		}
+
+		cur_node = stk.top();
+		stk.pop();
+
+		if (cur_node->right == nullptr || cur_node->right == pre_node) {
+			result.emplace_back(cur_node->val);
+			pre_node = cur_node;
+			cur_node = nullptr; 
+		} else {
+			stk.push(cur_node);
+			cur_node = cur_node->right;
+		}
+	}
+
+	return result;
 }
 
+
+// å±‚
+vector<vector<int>>Travel::Travel(struct TreeNode* root) {
+	vector<vector<int>> result;
+	if (root == nullptr) {
+		return result;
+	}
+	queue<TreeNode*> q;
+	q.emplace(root);
+	int node_size = 0;
+	while (!q.empty()) {
+		node_size = q.size();
+		vector<int> res;
+		while (node_size-- > 0) {
+			TreeNode* cur_node = q.front();
+			q.pop();
+
+			res.emplace_back(cur_node->val);
+			if (cur_node->left != nullptr) {
+				q.push(cur_node->left);
+			}
+			if (cur_node->right != nullptr) {
+				q.push(cur_node->right);
+			}
+		}
+		result.emplace_back(res);
+	}
+
+	return result;
+}
